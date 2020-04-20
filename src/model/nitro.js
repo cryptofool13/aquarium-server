@@ -25,4 +25,8 @@ const nitroSchema = new mongoose.Schema({
   },
 });
 
-module.exports = nitroSchema;
+const nitroList = new mongoose.Schema({
+  nitro: [nitroSchema],
+});
+
+module.exports = { nitroSchema, nitroList };

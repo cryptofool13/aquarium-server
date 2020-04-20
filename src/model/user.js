@@ -1,13 +1,14 @@
 const mongoose = require("mongoose");
 const crypto = require("crypto");
 
-const nitroSchema = require("./nitro");
-const phSchema = require("./ph");
+const { nitroList } = require("./nitro");
+const { phList } = require("./ph");
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -15,15 +16,31 @@ const userSchema = new mongoose.Schema({
   },
   salt: {
     type: String,
-    required: true,
   },
-  nitro: [nitroSchema],
-  ph: [phSchema],
+  nitro: nitroList,
+  ph: nitroList,
 });
 
-userSchema
+userSchema.pre("save", function (next) {
+  const user = this;
+  const salt = genRandomString(10);
+  const hash = sha512(user.password, salt);
+
+  user.password = hash;
+  user.salt = salt;
+  next();
+});
+
+userSchema.methods.comparePassword = function (typedPw, cb) {
+  let match = passwordsMatch(typedPw, this.password, this.salt);
+
+  cb(null, match)
+};
 
 function genRandomString(length) {
+  if (!length) {
+    throw new Error("must provide a length for salt");
+  }
   return crypto
     .randomBytes(Math.ceil(length / 2))
     .toString("hex")
@@ -35,8 +52,13 @@ function sha512(pw, salt) {
   hash.update(pw);
   const value = hash.digest("hex");
 
-  return {
-    salt,
-    value,
-  };
+  return value;
 }
+
+function passwordsMatch(candidate, hashed, salt) {
+  const hashedCandidate = sha512(candidate, salt);
+  return hashed === hashedCandidate;
+}
+
+
+module.exports = mongoose.model('User', userSchema)

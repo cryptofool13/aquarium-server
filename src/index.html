@@ -7,5 +7,42 @@
   </head>
   <body>
     <h1>Aquarium Server</h1>
+    <h3>sign up today!</h3>
+    ss
+    <label for="name">username</label>
+    <input id="name" name="name" type="text" />
+    <label for="pw">password</label>
+    <input type="password" name="password" id="pw" />
+    <button onclick="newUser(this)">submit</button>
+    <h3>Log In</h3>
+    ss
+    <label for="name">username</label>
+    <input id="name" name="name" type="text" />
+    <label for="pw">password</label>
+    <input type="password" name="password" id="pw" />
+    <button onclick="logIn(this)">submit</button>
+    <script>
+      function newUser(e) {
+        // e.preventDefault();
+        const name = document.querySelector("#name").value;
+        const password = document.querySelector("#pw").value;
+        let bod = JSON.stringify({ name, password });
+        fetch("/signup", {
+          method: "POST",
+          body: bod,
+        }).then((e) => console.log(e));
+      }
+
+      function logIn(e) {
+        // e.preventDefault();
+        const name = document.querySelector("#name").value;
+        const password = document.querySelector("#pw").value;
+        let bod = JSON.stringify({ name, password });
+        fetch("/login", {
+          method: "POST",
+          body: bod,
+        }).then((e) => console.log(e));
+      }
+    </script>
   </body>
 </html>

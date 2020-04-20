@@ -13,4 +13,8 @@ const phSchema = new mongoose.Schema({
   },
 });
 
-module.exports = phSchema;
+const phList = new mongoose.Schema({
+  ph: [phSchema],
+});
+
+module.exports ={ phSchema, phList};

@@ -1,9 +1,10 @@
-const path = require("path");
+const { index } = require("./middlewares");
+
+const { createUser, logIn } = require("./controllers/auth");
 
 module.exports = (app) => {
   // send api docs inside index.html on '/'
-  app.get("/", (req, res) => {
-    res.sendFile(path.join(__dirname, "./index.html"));
-  });
-  
+  app.get("/", index);
+  app.post("/signup", createUser);
+  app.post("/login", logIn);
 };
