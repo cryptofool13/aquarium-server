@@ -30,7 +30,11 @@
         fetch("/signup", {
           method: "POST",
           body: bod,
-        }).then((e) => console.log(e));
+        })
+          .then((r) => r.json())
+          .then((res) => {
+            console.log(res);
+          });
       }
 
       function logIn(e) {
@@ -41,7 +45,9 @@
         fetch("/login", {
           method: "POST",
           body: bod,
-        }).then((r) => r.json()).then(res => console.log(res));
+        })
+          .then((r) => r.json())
+          .then((res) => console.log(res));
       }
     </script>
   </body>
