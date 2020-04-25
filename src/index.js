@@ -23,8 +23,6 @@ const router = require("./router");
 
 const app = express();
 
-// app.use(express.static('public'));
-
 app.use(bodyParser.json({ type: "*/*" }));
 app.use(bodyParser.urlencoded({extended: true}))
 
