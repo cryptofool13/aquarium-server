@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
 		type: String,
 	},
 	nitro: nitroList,
-	ph: nitroList,
+	ph: phList,
 });
 
 userSchema.pre("save", function (next) {
