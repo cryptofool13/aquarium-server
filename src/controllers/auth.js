@@ -39,9 +39,12 @@ exports.logIn = function (req, res, next) {
 				res.json({message: "incorrect name or password!"})
 			} else {
 				const token = tokenForUser(user)
-				res.json(token)
+				res.json({token})
 			}
 		});
     // res.send(user);
+  }).catch(e => {
+    res.json({message: "incorrect username or password"})
+    console.log(e)
   });
 };
