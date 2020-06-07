@@ -3,63 +3,63 @@ const crypto = require("crypto");
 
 const { nitroList } = require("./nitro");
 const { phList } = require("./ph");
+const { tankList } = require("./tank");
 
 const userSchema = new mongoose.Schema({
-	name: {
-		type: String,
-		required: true,
-		unique: true,
-	},
-	password: {
-		type: String,
-		required: true,
-	},
-	salt: {
-		type: String,
-	},
-	nitro: nitroList,
-	ph: phList,
+  name: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  salt: {
+    type: String,
+  },
+  tanks: tankList,
 });
 
 userSchema.pre("save", function (next) {
-	if (this.isNew) {
-		const user = this;
-		const salt = genRandomString(10);
-		const hash = sha512(user.password, salt);
+  if (this.isNew) {
+    const user = this;
+    const salt = genRandomString(10);
+    const hash = sha512(user.password, salt);
 
-		user.password = hash;
-		user.salt = salt;
-	}
-	next();
+    user.password = hash;
+    user.salt = salt;
+  }
+  next();
 });
 
 userSchema.methods.comparePassword = function (typedPw, cb) {
-	let match = passwordsMatch(typedPw, this.password, this.salt);
+  let match = passwordsMatch(typedPw, this.password, this.salt);
 
-	cb(null, match);
+  cb(null, match);
 };
 
 function genRandomString(length) {
-	if (!length) {
-		throw new Error("must provide a length for salt");
-	}
-	return crypto
-		.randomBytes(Math.ceil(length / 2))
-		.toString("hex")
-		.slice(0, length);
+  if (!length) {
+    throw new Error("must provide a length for salt");
+  }
+  return crypto
+    .randomBytes(Math.ceil(length / 2))
+    .toString("hex")
+    .slice(0, length);
 }
 
 function sha512(pw, salt) {
-	const hash = crypto.createHmac("sha512", salt);
-	hash.update(pw);
-	const value = hash.digest("hex");
+  const hash = crypto.createHmac("sha512", salt);
+  hash.update(pw);
+  const value = hash.digest("hex");
 
-	return value;
+  return value;
 }
 
 function passwordsMatch(candidate, hashed, salt) {
-	const hashedCandidate = sha512(candidate, salt);
-	return hashed === hashedCandidate;
+  const hashedCandidate = sha512(candidate, salt);
+  return hashed === hashedCandidate;
 }
 
 module.exports = mongoose.model("User", userSchema);
