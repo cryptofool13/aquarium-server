@@ -8,12 +8,18 @@ const tankSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  gallons: {
+    type: Number,
+    required: true, 
+  },
   ph: phList,
   nitro: nitroList,
 });
 
-const tankList = new mongoose.Schema({
-  tanks: [tankSchema],
-});
+// const tankList = new mongoose.Schema({
+//   tanks: [tankSchema],
+// });
 
-module.exports = { tankSchema, tankList };
+const Tank = mongoose.model("Tank", tankSchema)
+
+module.exports = { Tank, tankSchema };

@@ -7,7 +7,7 @@ function tokenForUser(user) {
 
   return sign({ sub: user.id, iat: timestamp }, process.env.jwtSecret, {
     // set to longer exp when done testing
-    expiresIn: "1min",
+    expiresIn: "1hr",
   });
 }
 

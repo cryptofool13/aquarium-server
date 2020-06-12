@@ -3,7 +3,7 @@ const crypto = require("crypto");
 
 const { nitroList } = require("./nitro");
 const { phList } = require("./ph");
-const { tankList } = require("./tank");
+const { tankSchema } = require("./tank");
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
   salt: {
     type: String,
   },
-  tanks: tankList,
+  tanks: [tankSchema],
 });
 
 userSchema.pre("save", function (next) {
