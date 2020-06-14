@@ -8,28 +8,26 @@ exports.newTank = function (req, res, next) {
   const token = req.headers.authorization.split(" ")[1];
   const decoded = verify(token, process.env.jwtSecret);
   User.findById(decoded.sub).then((doc) => {
-    let { tanks } = doc;
-    console.log("tanks: ", tanks);
-    if (!tanks) {
-      tanks = [];
-    }
-    Tank.create({ name: tankInput.name, gallons: tankInput.gallons }).then(
-      (doc) => {
-        doc.save();
-        console.log(doc);
-        tanks.push(doc._id);
-        User.findByIdAndUpdate(
-          decoded.sub,
-          { tanks: tanks },
-          { new: true }
-        ).then((doc) => {
-          res.send(doc);
-        });
+    // create new tank
+    let tank = new Tank({
+      name: tankInput.name,
+      gallons: tankInput.gallons,
+      _owner: decoded.sub,
+    });
+    // save tank and to _owner object
+    tank.save((err) => {
+      if (err) console.log("tank save error:", err);
+    });
+    doc.tanks.push(tank._id);
+    // save changes done to _owner and populate tanks
+    doc.save((err) => {
+      if (err) {
+        return res.status(400).json({ error: err.message });
       }
-    );
+      doc.populate("tanks");
+      res.json(doc);
+    });
   });
-
-  // res.send(decoded)
 };
 
 exports.getTank = function (req, res, next) {

@@ -18,8 +18,21 @@ const userSchema = new mongoose.Schema({
   salt: {
     type: String,
   },
-  tanks: [tankSchema],
+  // tanks: [tankSchema],
+  tanks: {
+    type: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Tank",
+      },
+    ],
+    validate: [limitTanks, "{PATH} exceeds the limit of 10"],
+  },
 });
+
+function limitTanks(val) {
+  return val.length <= 10;
+}
 
 userSchema.pre("save", function (next) {
   if (this.isNew) {

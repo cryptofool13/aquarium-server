@@ -10,16 +10,21 @@ const tankSchema = new mongoose.Schema({
   },
   gallons: {
     type: Number,
-    required: true, 
+    required: true,
   },
   ph: phList,
   nitro: nitroList,
+  _owner: {
+    type: mongoose.Schema.ObjectId,
+    required: true,
+    ref: "User",
+  },
 });
 
 // const tankList = new mongoose.Schema({
 //   tanks: [tankSchema],
 // });
 
-const Tank = mongoose.model("Tank", tankSchema)
+const Tank = mongoose.model("Tank", tankSchema);
 
 module.exports = { Tank, tankSchema };
