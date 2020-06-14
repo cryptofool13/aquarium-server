@@ -31,3 +31,15 @@ exports.newTank = function (req, res, next) {
 
   // res.send(decoded)
 };
+
+exports.getTank = function (req, res, next) {
+  let { tankId } = req.params;
+  // res.send(tankId);
+  Tank.findById(tankId)
+    .then((doc) => {
+      res.json(doc);
+    })
+    .catch((e) => {
+      res.send(e);
+    });
+};

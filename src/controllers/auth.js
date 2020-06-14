@@ -40,12 +40,15 @@ exports.logIn = function (req, res, next) {
 
   User.findOne({ name: returningUser.name })
     .then((user) => {
+      if (!user) {
+        return res.json({ error: "incorrect name or password!" });
+      }
       user.comparePassword(returningUser.password, (err, auth) => {
         if (!auth) {
-          res.json({ error: "incorrect name or password!" });
+          return res.json({ error: "incorrect name or password!" });
         } else {
           const token = tokenForUser(user);
-          res.json({ token });
+          return res.json({ token });
         }
       });
     })
