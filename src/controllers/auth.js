@@ -69,7 +69,7 @@ exports.getUserData = function (req, res, next) {
     let id = decoded.sub;
     User.findById(id)
       .then((doc) => {
-        console.log(doc);
+        // console.log(doc);
         res.json({
           user: {
             name: doc.name,
